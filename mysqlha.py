@@ -5,8 +5,8 @@ import pymysql
 import logging
 import dns
 
-master_server='mysql30002.db.ymatou.com'
-slave_server='172.16.101.212'
+master_server='mysql30002.db.com'
+slave_server='mysql30002-readonly.db.com'
 
 logging.basicConfig(level=logging.DEBUG,
     format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
