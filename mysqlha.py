@@ -36,9 +36,9 @@ def confirm_mas_pos():
     #compare master status 
     if ( old_mpos[0][0]==new_mpos[0][0] and   old_mpos[0][1]==new_mpos[0][1] ):
         logging.info(': master status no change ')
-        return 1
+        return True
     else:
-        return 0
+        return False
 
 def kill_process():
     ds=sql_conn(master_server,"""SELECT  CONCAT('kill ',id,';') FROM information_schema.PROCESSLIST WHERE  command='Sleep' """)
@@ -54,10 +54,10 @@ def confirm_slave_no_delay():
     master_time=sql_conn(master_server,'SELECT c_currtime FROM  t_dba_timediff;')
     slave_time=sql_conn(slave_server,'SELECT c_currtime FROM  t_dba_timediff;')
     if (master_time != slave_time):
-        return 0
+        return False
     else:
         logging.info(': master time %s equal slave time %s no delay'%(master_time[0][0],slave_time[0][0]))
-        return 1
+        return True
 
 def change_dns_resolve():
     pass
