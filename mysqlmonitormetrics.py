@@ -117,12 +117,12 @@ def concurrent_monitor(q):
 if __name__ == '__main__':
     print "monitor start at %s" % (datetime.datetime.now())
     dt = time.strftime("%Y-%m-%d %H:%M:00")
-    conn91_str = {"host": "monitor.db.ymatou.com", "user": "monitoruser", "passwd": "mmowhci$53nZH2whc@452276w", "port": 30001, "db": "dbmonitor"}
+    conn91_str = {"host": "monitor.db.com", "user": "test", "passwd": "123456", "port": 3306, "db": "dbmonitor"}
     #get mysql ip lists
     list_sql = "SELECT serverip ,serverport FROM  dbmonitor.t_mysqlserverinfo WHERE ismonitor=1"
     que = Queue()
     for i in mysqlconn(list_sql, **conn91_str):
-        list_conn = {"host": i[0], "user": "monitoruser", "passwd": "mmowhci$53nZH2whc@452276w", "port": int(i[1]), "db": "dbmanager"}
+        list_conn = {"host": i[0], "user": "test", "passwd": "123456", "port": int(i[1]), "db": "dbmanager"}
         que.put(list_conn)
 
     l_threads=[]
