@@ -49,7 +49,7 @@ def kill_process():
     except Exception as e:
             logging.info(': no active connections ')
 
-
+# or SELECT MASTER_POS_WAIT('mysql-bin.000756', 262866050);
 def confirm_slave_no_delay():
     master_time=sql_conn(master_server,'SELECT c_currtime FROM  t_dba_timediff;')
     slave_time=sql_conn(slave_server,'SELECT c_currtime FROM  t_dba_timediff;')
