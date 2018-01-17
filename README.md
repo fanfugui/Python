@@ -4,6 +4,5 @@
  
 #####
 ``` python
-import pymysql
-import os
+
 ```
