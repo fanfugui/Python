@@ -2,29 +2,41 @@
 
 import os
 import sys
+imoprt operator
 
 INNODB_PAGE_SIZE = 1024 * 16  # InnoDB Page 16K
 
-if __name__ == '__main__':
-    fil = file(sys.argv[1], 'rb')
-    table_name=fil.name.split('/')[-1].split('.')[0]
+def get_table_disk_usage_percent(fil):
+    fil = file(fil, 'rb')
+    table_name = fil.name.split('/')[-1].split('.')[0]
     page_count = os.path.getsize(fil.name) / (INNODB_PAGE_SIZE)
     n_btree_pages = 0
     n_free_space = 0
     n_garbage_space = 0
-    #print(page_count)
+    # print(page_count)
     for i in range(page_count):
         page = fil.read(INNODB_PAGE_SIZE)
         # btree node
         if page[24:26].encode('hex') == '45bf':
             n_btree_pages += 1
             free_space_start_pos = int(page[40:42].encode('hex'), 16)
-            n_slots=int(page[38:40].encode('hex') ,16)
-            n_page_dir_byte =8
-            n_free_space  = n_free_space + (INNODB_PAGE_SIZE-free_space_start_pos-n_page_dir_byte-2*n_slots)
+            n_slots = int(page[38:40].encode('hex'), 16)
+            n_page_dir_byte = 8
+            n_free_space = n_free_space + (INNODB_PAGE_SIZE - free_space_start_pos - n_page_dir_byte - 2 * n_slots)
             n_garbage_space += int(page[46:48].encode('hex'), 16)
 
-    total_btree_space =  n_btree_pages*INNODB_PAGE_SIZE
-    disk_usage_percent= 100-(n_free_space+n_garbage_space)*100.0 /total_btree_space
-    print ('table `{1}` disk usage percent : {0:.2f}%'.format(disk_usage_percent,table_name))
+    total_btree_space = n_btree_pages * INNODB_PAGE_SIZE
+    disk_usage_percent = 100 - (n_free_space + n_garbage_space) * 100.0 / total_btree_space
+    return '{0:.2f}'.format(disk_usage_percent)
 
+
+if __name__ == '__main__':
+    dir_name = sys.argv[1]
+    g_file = os.walk(dir_name)
+    files = next(g_file)[2]
+    result={}
+    for file_name in files:
+        if file_name.endswith('ibd'):
+            result[file_name.replace('.ibd','')]=get_table_disk_usage_percent(dir_name + '/' + file_name)
+    for table_name , usage_percent in sorted(result.items(), key=operator.itemgetter(1),reverse=False):
+        print ('table {1:20} disk usage percent : {0}%'.format(usage_percent, table_name))
