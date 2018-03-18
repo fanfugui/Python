@@ -26,5 +26,5 @@ if __name__ == '__main__':
 
     total_btree_space =  n_btree_pages*INNODB_PAGE_SIZE
     disk_usage_percent= 100-(n_free_space+n_garbage_space)*100.0 /total_btree_space
-    print ('table `{1}` disk usage percent : {0}%'.format(disk_usage_percent,table_name))
+    print ('table `{1}` disk usage percent : {0:.2f}%'.format(disk_usage_percent,table_name))
 
